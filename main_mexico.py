@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 # Carga variables locales de .env si existe
 load_dotenv()
 
-API_KEY = os.getenv("f9bc714e-3cb9-4aaa-86cd-5e9bed306683")
+API_KEY = os.getenv("IQAIR_API_KEY")
 PAIS = "Mexico"
 
 # Nombres exactos de estados reconocidos por IQAir para México
