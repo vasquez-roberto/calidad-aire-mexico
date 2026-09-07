@@ -1,0 +1,39 @@
+name: Monitoreo Nacional Calidad del Aire Mexico
+
+on:
+  schedule:
+    # Se ejecuta cada 6 horas (00:00, 06:00, 12:00, 18:00 UTC)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clonar Repositorio
+      uses: actions/checkout@v4
+
+    - name: Configurar Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Instalar Dependencias
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Ejecutar Recolección Nacional
+      env:
+        IQAIR_API_KEY: ${{ secrets.IQAIR_API_KEY }}
+      run: python main_mexico.py
+
+    - name: Guardar Cambios en GitHub
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "Automated update: Mediciones de calidad del aire en Mexico"
+        file_pattern: 'data/calidad_aire_mexico.csv'
