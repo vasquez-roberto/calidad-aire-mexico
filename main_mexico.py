@@ -5,17 +5,16 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-# Carga variables locales de .env si existe
 load_dotenv()
 
 API_KEY = os.getenv("IQAIR_API_KEY")
 PAIS = "Mexico"
 
-# Nombres exactos de estados reconocidos por IQAir para México
+# Nombres corregidos según el estándar de IQAir
 ESTADOS = [
     "Nuevo Leon",
     "Jalisco",
-    "Federal District",  # Nombre que usa IQAir para CDMX / Ciudad de México
+    "Mexico City",  # Nombre correcto para CDMX en IQAir
     "Guanajuato",
     "Puebla",
     "Baja California",
@@ -27,7 +26,6 @@ ESTADOS = [
 
 
 def obtener_ciudades_por_estado(estado):
-    """Obtiene la lista de ciudades disponibles en un estado."""
     url = f"http://api.airvisual.com/v2/cities?state={estado}&country={PAIS}&key={API_KEY}"
     try:
         res = requests.get(url, timeout=10)
@@ -35,17 +33,14 @@ def obtener_ciudades_por_estado(estado):
         if data.get("status") == "success":
             return [item["city"] for item in data["data"]]
         else:
-            print(
-                f"Aviso al buscar ciudades de {estado}:"
-                f" {data.get('data', {}).get('message')}"
-            )
+            msg = data.get("data", {}).get("message", "Sin detalles")
+            print(f"Aviso al buscar ciudades de {estado}: {msg}")
     except Exception as e:
         print(f"Error consultando ciudades de {estado}: {e}")
     return []
 
 
 def obtener_datos_ciudad(ciudad, estado):
-    """Consulta la calidad del aire y coordenadas de una ciudad específica."""
     url = f"http://api.airvisual.com/v2/city?city={ciudad}&state={estado}&country={PAIS}&key={API_KEY}"
     try:
         res = requests.get(url, timeout=10)
@@ -53,7 +48,7 @@ def obtener_datos_ciudad(ciudad, estado):
 
         if data.get("status") == "success":
             info = data["data"]
-            coords = info["location"]["coordinates"]  # [longitud, latitud]
+            coords = info["location"]["coordinates"]
             pollution = info["current"]["pollution"]
             weather = info["current"]["weather"]
 
@@ -73,8 +68,8 @@ def obtener_datos_ciudad(ciudad, estado):
                 "Humedad_%": weather["hu"],
             }
         else:
-            msg = data.get("data", {}).get("message", "Sin mensaje")
-            print(f"No hay datos para {ciudad}, {estado} (Razón: {msg})")
+            msg = data.get("data", {}).get("message", "Sin detalles")
+            print(f"No hay datos para {ciudad}, {estado} ({msg})")
     except Exception as e:
         print(f"Error al consultar {ciudad}, {estado}: {e}")
 
@@ -93,10 +88,9 @@ def ejecutar_monitoreo_nacional():
         print(f"\n--- Procesando Estado: {estado} ---")
         ciudades = obtener_ciudades_por_estado(estado)
 
-        # Pausa de 1.5 segundos entre llamadas para respetar el rate limit
-        time.sleep(1.5)
+        # Pausa de 3 segundos para evitar 'Too Many Requests'
+        time.sleep(3)
 
-        # Consultamos la primera ciudad disponible de cada estado para cuidar llamadas
         for ciudad in ciudades[:1]:
             print(f"Consultando: {ciudad}, {estado}...")
             datos = obtener_datos_ciudad(ciudad, estado)
@@ -104,8 +98,7 @@ def ejecutar_monitoreo_nacional():
             if datos:
                 registros.append(datos)
 
-            # Pausa de 1.5 segundos entre consultas a ciudades
-            time.sleep(1.5)
+            time.sleep(3)
 
     if registros:
         guardar_en_csv(registros)
