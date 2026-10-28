@@ -386,3 +386,5 @@ Fecha,Hora,Pais,Estado,Ciudad,Latitud,Longitud,AQI_US,Contaminante_Principal,Tem
 2026-10-27,17:19:28,Mexico,Yucatan,Merida,20.97537,-89.61696,12,p2,29,64
 2026-10-27,21:43:58,Mexico,Nuevo Leon,Bosques de San Pedro,25.60139,-100.17972,44,p2,22,77
 2026-10-27,21:44:05,Mexico,Jalisco,Ajijic,20.30325,-103.25476,52,p2,23,56
+2026-10-28,03:39:50,Mexico,Nuevo Leon,Bosques de San Pedro,25.60139,-100.17972,17,p2,21,81
+2026-10-28,03:39:57,Mexico,Jalisco,Ajijic,20.30325,-103.25476,43,p2,20,73
