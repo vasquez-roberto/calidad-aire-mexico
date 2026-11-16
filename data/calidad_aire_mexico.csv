@@ -500,3 +500,5 @@ Fecha,Hora,Pais,Estado,Ciudad,Latitud,Longitud,AQI_US,Contaminante_Principal,Tem
 2026-11-15,22:24:38,Mexico,Jalisco,Ajijic,20.30325,-103.25476,46,p2,24,38
 2026-11-16,04:25:07,Mexico,Nuevo Leon,Cadereyta Jimenez,25.58896,-100.00156,46,p2,21,83
 2026-11-16,04:25:14,Mexico,Jalisco,Ajijic,20.30325,-103.25476,35,p2,18,59
+2026-11-16,14:34:03,Mexico,Nuevo Leon,Bosques de San Pedro,25.60139,-100.17972,64,p2,16,91
+2026-11-16,14:34:10,Mexico,Jalisco,Ajijic,20.30325,-103.25476,41,p2,16,70
